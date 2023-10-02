@@ -4,9 +4,12 @@ from datetime import date
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip  import GZipMiddleware
 from routes import UserRoute, HomeRoute, ObservationRoute
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="../static"), name="static")
 
 origins = [
     #"http://localhost.tiangolo.com",
@@ -17,6 +20,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
+    GZipMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],

@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
 
-templates = Jinja2Templates(directory="../static/templates")
+templates = Jinja2Templates(directory="../static/templates/layouts")
 
 @router.get("/")
 async def root():
