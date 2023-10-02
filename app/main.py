@@ -5,8 +5,11 @@ from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from routes import UserRoute, HomeRoute, ObservationRoute
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="../static"), name="static")
 
 origins = [
     #"http://localhost.tiangolo.com",
@@ -29,7 +32,7 @@ app.include_router(ObservationRoute.router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
 
 
 #  --------------------------------------------------------------
