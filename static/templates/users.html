@@ -1,0 +1,69 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Fast APi | listado{% endblock %}
+
+{% block content %}
+
+    <div class="w-full">
+        <div class="container xl:mx-auto">
+            <div class="flex flex-col py-24">
+                <p>listar usuarios</p>
+                <div class="pt-4">
+                    <div class="flex flex-col items-center">
+                        <div class="overflow-x-auto" id="list">
+                            <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+                              <thead class="ltr:text-left rtl:text-right">
+                                <tr>
+                                  <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                    Name
+                                  </th>
+                                  <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                    Date of Birth
+                                  </th>
+                                  <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                    Role
+                                  </th>
+                                  <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                    Salary
+                                  </th>
+                                </tr>
+                              </thead>
+                          
+                              <tbody class="divide-y divide-gray-200">
+                                <tr class="odd:bg-gray-50">
+                                  <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                    John Doe
+                                  </td>
+                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">24/05/1995</td>
+                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">Web Developer</td>
+                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">$120,000</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center">
+                <a
+                class="inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500 cursor-pointer" 
+                onclick="getListUser()" >
+                    Listar
+                </a>
+            </div>
+
+            <div class="pt-4 flex flex-col items-center">
+                <a
+                class="inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-indigo-600 focus:outline-none focus:ring active:text-indigo-500 cursor-pointer" 
+                onclick="getAllById()" >
+                    Listar por id
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/user.js"></script>
+{% endblock %}
