@@ -12,7 +12,7 @@ function getListUser()
         //     console.log("name: " + jsonData[i].name);
         //     console.log("email: " + jsonData[i].email);
         // }
-        // document.getElementById("list").innerHTML = jsonData.data[i].name;
+        document.getElementById("list").innerHTML = jsonData.data;
     }).catch(function (error) {
         console.log(error);
     });

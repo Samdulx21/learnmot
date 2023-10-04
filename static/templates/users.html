@@ -6,38 +6,48 @@
 
     <div class="w-full">
         <div class="container xl:mx-auto">
-            <div class="flex flex-col py-24">
+            <div class="flex flex-col py-2" id="list">
                 <p>listar usuarios</p>
+                <!-- <pre>{{ response | tojson(indent=4) }}</pre> -->
+
+                <!-- <div>
+                  {% for item in response['result'] if item['name'] == "samuel" %}
+                  <ul>
+                    <li>{{ item.name }}</li>
+                  </ul>
+                  {% endfor %}
+                </div> -->
+
                 <div class="pt-4">
                     <div class="flex flex-col items-center">
-                        <div class="overflow-x-auto" id="list">
-                            <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-                              <thead class="ltr:text-left rtl:text-right">
+                        <div class="overflow-x-auto">
+                          <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm border">
+                            <thead class="ltr:text-left rtl:text-right">
+                                {% for item in response['result'] %}
                                 <tr>
                                   <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                                     Name
                                   </th>
                                   <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                                    Date of Birth
+                                    Last_name
                                   </th>
                                   <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                                     Role
                                   </th>
                                   <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                                    Salary
+                                    sex
                                   </th>
                                 </tr>
                               </thead>
                           
                               <tbody class="divide-y divide-gray-200">
                                 <tr class="odd:bg-gray-50">
-                                  <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                                    John Doe
-                                  </td>
-                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">24/05/1995</td>
-                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">Web Developer</td>
-                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">$120,000</td>
+                                  <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{ item.name }}</td>
+                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ item.last_name }}</td>
+                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ item.role }}</td>
+                                  <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{ item.sex }}</td>
                                 </tr>
+                                {% endfor %}
                               </tbody>
                             </table>
                           </div>

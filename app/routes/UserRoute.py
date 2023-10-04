@@ -1,7 +1,10 @@
 from fastapi import APIRouter, HTTPException, Request
 from controllers.UserController import *
+from fastapi.responses import HTMLResponse
 from models.ModelUsers import User
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+import json
 
 router = APIRouter()
 
@@ -9,11 +12,10 @@ users = UserController()
 
 templates = Jinja2Templates(directory="../static/templates")
 
-@router.get("/list/users")
+@router.get("/list/users", response_class=HTMLResponse)
 async def get_users(request: Request):
     response = users.get_users()
     return templates.TemplateResponse("users.html",{"request": request, "response": response})
-    # return response
 
 @router.post("/insert/user")
 async def insert_user(newuser: User):
