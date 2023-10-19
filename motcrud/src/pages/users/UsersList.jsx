@@ -1,19 +1,22 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 function UsersList() {
 
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-        const getUsers = async () => {
-            const url = await axios.get("http://127.0.0.1:8000/list/users");
-            const res = url;
-            setUsers(res.data.res);
-        };
-        getUsers();
-    }, []);
+    const [ data, setData ] = useState([]);
+    // const [ loading, setLoading ] = useState(true);
 
-    console.log(users);
+    useEffect(() => {
+        const apiUrl = "http://127.0.0.1:8000/list/users"
+
+        axios.get(apiUrl).then(response => {
+            setData(response.data);
+            // setLoading(false)
+        }).catch(error => {
+            console.error('Error al obtener los datos: ', error);
+            // setLoading(false);
+        })
+    }, [])
 
     return (
         <div>
@@ -41,10 +44,10 @@ function UsersList() {
                         </thead>
 
                         <tbody className="divide-y divide-gray-200">
-                            {users.map((item) => {
-                                return (
+                            {data.length > 0 ? (
+                                data.map(item => (
                                     <tr key={item.id}>
-                                        <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                                        <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >
                                         {item.name}
                                         </td>
                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item.last_name}</td>
@@ -52,8 +55,12 @@ function UsersList() {
                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item.role}</td>
                                         <td className="whitespace-nowrap px-4 py-2 text-gray-700">{item.email}</td>
                                     </tr>
-                                )
-                            })}
+                            ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5">Cargando...</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
