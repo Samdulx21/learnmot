@@ -9,6 +9,10 @@ class User(BaseModel):
     email: str
     password: str 
 
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
 # class SelectRole(str, Enum):
 #     Admin = 'admin'
 #     Teacher = 'teacher'

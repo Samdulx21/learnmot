@@ -1,6 +1,16 @@
 from fastapi import APIRouter, HTTPException
+import jwt
 from controllers.UserController import *
-from models.ModelUsers import User
+from models.ModelUsers import User, UserLogin
+
+SECRET_KEY = "wilbertdaniel2123456789"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 800
+
+dummy_user = {
+    "email": "wilbertdaniel2@gmail.com",
+    "password": "123456asd",
+}
 
 router = APIRouter()
 
@@ -11,9 +21,14 @@ async def get_users():
     response = users.get_users()
     return response
 
-# @router.post("/login")
-# async def login(username: str, password: str):
-#     return {"msg: logueado"}
+@router.post("/login/sigunp")
+async def login_user(login_item: UserLogin):
+    data = jsonable_encoder(login_item)
+    if dummy_user['email'] == data['email'] and dummy_user['password'] == data['password']:
+        encode_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+        return {'token': encode_jwt}
+    else:
+        return {'message': "Login failed"}
 
 @router.post("/insert/user")
 async def insert_user(newuser: User):
