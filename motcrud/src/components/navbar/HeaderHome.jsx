@@ -1,6 +1,9 @@
+import { Router, Route, Link } from 'react-router-dom';
+// import Login from '../login';
+
 function HeaderHome(){
     return (
-        <>
+        <div>
             <header className="bg-white">
                 <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 items-center justify-between">
@@ -55,20 +58,20 @@ function HeaderHome(){
 
                             <div className="flex items-center gap-4">
                                 <div className="sm:flex sm:gap-4">
-                                    <a
+                                    <Link
                                     className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow"
-                                    href="/"
+                                    to="/login"
                                     >
                                     Login
-                                    </a>
+                                    </Link>
 
                                     <div className="hidden sm:flex">
-                                    <a
-                                        className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
-                                        href="/"
-                                    >
-                                        Register
-                                    </a>
+                                        <Link
+                                            className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
+                                            to='/register'
+                                        >
+                                            Register
+                                        </Link>
                                     </div>
                                 </div>
 
@@ -96,8 +99,10 @@ function HeaderHome(){
                         </div>
                     </div>
                 </div>
-            </header>
-        </>
+            </header>   
+        </div>
+
+            
     )
 }
 
