@@ -11,6 +11,10 @@ async def get_users():
     response = users.get_users()
     return response
 
+# @router.post("/login")
+# async def login(username: str, password: str):
+#     return {"msg: logueado"}
+
 @router.post("/insert/user")
 async def insert_user(newuser: User):
     response = users.insert_user(newuser)

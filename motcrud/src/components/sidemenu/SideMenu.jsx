@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 
 function SideMenu(){
     return (
@@ -47,8 +49,31 @@ function SideMenu(){
 
                             <ul className="space-y-1 border-t border-gray-100 pt-4">
                                 <li>
-                                    <a
-                                    href=""
+                                    <Link
+                                    to="/home/users"
+                                    className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                    >
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    strokeWidth={1.5} 
+                                    stroke="currentColor" 
+                                    className="w-6 h-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                    </svg>
+
+
+                                    <span
+                                        className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
+                                    >
+                                        Home
+                                    </span>
+                                    </Link>
+                                </li>
+
+                                <li>
+                                    <Link
+                                    to="/check/users"
                                     className="group relative flex justify-center rounded px-2 py-1.5 text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                                     >
                                     <svg
@@ -69,9 +94,9 @@ function SideMenu(){
                                     <span
                                         className="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
                                     >
-                                        Teams
+                                        People
                                     </span>
-                                    </a>
+                                    </Link>
                                 </li>
 
                                 <li>

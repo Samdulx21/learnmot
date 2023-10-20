@@ -118,3 +118,9 @@ class UserController:
             return {"error": err}
         finally:
             mydb.close()
+
+    # def login_user(self, user: User, username: str, password: str):
+    #     mydb = get_db_connection()
+    #     db = mydb.cursor()
+    #     user = db.query(user.name).filter(user.name == username).first()
+    #     return

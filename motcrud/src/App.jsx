@@ -1,8 +1,9 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import UsersPage from './pages/users/Userspages'
+import UsersSettings from './pages/users/UsersSettings'
+import UsersPeople from './pages/users/UsersPeople'
+import UsersHome from './pages/users/UsersHome'
+import UsersEdit from './components/users_crud/UsersEdit'
 import HomePage from './pages/Homepages'
-import UsersCreate from './pages/users/UsersCreate'
-import UsersList from './pages/users/UsersList'
 import Login from './components/login'
 
 function App() {
@@ -10,9 +11,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={ <HomePage /> } />
-        <Route path='/users' element={ <UsersPage /> } />
-        <Route path='/insert/users' element={ <UsersCreate /> } />
-        <Route path='/list/users' element={ <UsersList /> } />
+        <Route path='/home/users' element={ <UsersHome /> } />
+        <Route path='/check/users' element={ <UsersPeople /> } /> 
+        <Route path='/settings/users' element={ <UsersSettings /> } />
+        <Route path='/edit/users' element={ <UsersEdit /> } />
         <Route path='/login' element={ <Login /> } />
       </Routes>
     </BrowserRouter>
