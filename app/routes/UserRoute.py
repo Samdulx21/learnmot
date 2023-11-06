@@ -1,16 +1,12 @@
 from fastapi import APIRouter, HTTPException
+from fastapi import Depends
 import jwt
 from controllers.UserController import *
 from models.ModelUsers import User, UserLogin
 
-SECRET_KEY = "wilbertdaniel2123456789"
+SECRET_KEY = "SAMOIJUDL23449DSAKZV7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 800
-
-dummy_user = {
-    "email": "wilbertdaniel2@gmail.com",
-    "password": "123456asd",
-}
 
 router = APIRouter()
 
@@ -21,14 +17,23 @@ async def get_users():
     response = users.get_users()
     return response
 
-@router.post("/login/sigunp")
+@router.post("/login/signup")
 async def login_user(login_item: UserLogin):
-    data = jsonable_encoder(login_item)
-    if dummy_user['email'] == data['email'] and dummy_user['password'] == data['password']:
-        encode_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    user_validation_result = users.validation(login_item)
+
+    if "email" in user_validation_result and "user_pass" in user_validation_result:
+        encode_jwt = create_jwt(user_validation_result)
         return {'token': encode_jwt}
     else:
-        return {'message': "Login failed"}
+        raise HTTPException(status_code=401, detail="Login failed")
+
+def create_jwt(data):
+    try:
+        encode_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+        return encode_jwt
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=500, detail="Error generating token")
+    
 
 @router.post("/insert/user")
 async def insert_user(newuser: User):

@@ -1,7 +1,8 @@
 import mysql.connector
+import jwt
 from fastapi import HTTPException
 from config.database_config import get_db_connection
-from models.ModelUsers import User
+from models.ModelUsers import User, UserLogin
 from fastapi.encoders import jsonable_encoder
 
 
@@ -24,7 +25,7 @@ class UserController:
                     'sex':item[3],
                     'role':item[4],
                     'email':item[5],
-                    'password':item[6],
+                    'user_pass':item[6],
                 }
                 payload.append(content)
                 content = {}
@@ -47,12 +48,12 @@ class UserController:
             sex = newuser.sex
             role = newuser.role
             email = newuser.email
-            password = newuser.password
+            user_pass = newuser.user_pass
             mydb = get_db_connection()
             db = mydb.cursor() 
             db.execute("""
-                    INSERT INTO users(name,last_name,sex,role,email,password) VALUES(%s,%s,%s,%s,%s,%s)""",
-                    (name,last_name,sex,role,email,password))
+                    INSERT INTO users(name,last_name,sex,role,email,user_pass) VALUES(%s,%s,%s,%s,%s,%s)""",
+                    (name,last_name,sex,role,email,user_pass))
             mydb.commit()
             mydb.close()
             return {"info":"User create successfully."}
@@ -77,7 +78,7 @@ class UserController:
             sex = updateuser.sex
             role = updateuser.role
             email = updateuser.email
-            password = updateuser.password
+            user_pass = updateuser.user_pass
             update = """
                 UPDATE users SET
                 name = %s,
@@ -85,10 +86,10 @@ class UserController:
                 sex = %s,
                 role = %s,
                 email = %s,
-                password = %s
+                user_pass = %s
                 WHERE id = %s
             """
-            db.execute(update,(name,last_name,sex,role,email,password, id))
+            db.execute(update,(name,last_name,sex,role,email,user_pass, id))
             mydb.commit()
             mydb.close()
             return {"info":"User updated successfully."}
@@ -119,8 +120,21 @@ class UserController:
         finally:
             mydb.close()
 
-    # def login_user(self, user: User, username: str, password: str):
-    #     mydb = get_db_connection()
-    #     db = mydb.cursor()
-    #     user = db.query(user.name).filter(user.name == username).first()
-    #     return
+    def validation(self, user_login: UserLogin):
+        try:
+            mydb = get_db_connection()
+            db = mydb.cursor()
+            user_email = user_login.email
+            user_pass = user_login.user_pass 
+            query_login = "SELECT email, user_pass FROM users WHERE email = %s AND user_pass = %s"
+            db.execute(query_login, (user_email, user_pass))
+            response = db.fetchone()
+            if response:
+                return {"email": user_email, "user_pass": user_pass}
+            else:
+                raise HTTPException(status_code=401, detail="Incorrect Credentials")
+        except mysql.connector.Error as err:
+            mydb.rollback()
+            return {"error": err}
+        finally:
+            mydb.close()

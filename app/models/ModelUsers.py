@@ -7,11 +7,11 @@ class User(BaseModel):
     sex: str
     role: str 
     email: str
-    password: str 
+    user_pass: str 
 
 class UserLogin(BaseModel):
     email: str
-    password: str
+    user_pass: str
 
 # class SelectRole(str, Enum):
 #     Admin = 'admin'
