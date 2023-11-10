@@ -5,19 +5,24 @@ import UsersHome from './pages/users/UsersHome'
 import UsersEdit from './components/users_crud/UsersEdit'
 import AcademicLoad from './pages/academic_load/AcademicLoad'
 import HomePage from './pages/Homepages'
-import Login from './components/login'
+import Login from './components/Login'
+import {RequireToken} from './components/Auth'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={ <HomePage /> } />
-        <Route path='/home/users' element={ <UsersHome /> } />
-        <Route path='/check/users' element={ <UsersPeople /> } /> 
+        <Route path='/login' element={ <Login /> } />
+        <Route path='/home/users' 
+          element={ 
+            <RequireToken>
+              <UsersHome /> 
+            </RequireToken> } />
+        {/* <Route path='/check/users' element={ <UsersPeople /> } /> 
         <Route path='/settings/users' element={ <UsersSettings /> } />
         <Route path='/academic/loads' element={ <AcademicLoad /> } />
-        <Route path='/edit/users' element={ <UsersEdit /> } />
-        <Route path='/login' element={ <Login /> } />
+        <Route path='/edit/users' element={ <UsersEdit /> } /> */}
       </Routes>
     </BrowserRouter>
   )

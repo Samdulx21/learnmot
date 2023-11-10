@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom"
+import {useNavigate} from "react-router-dom";
 
 
 function SideMenu(){
+
+    const navigate = useNavigate();
+    const signOut = () => {
+        localStorage.removeItem('kjhuhsnner27vToken')
+        navigate("/");
+    }
+
     return (
         <>
             <div className="flex h-screen w-16 flex-col justify-between border-e bg-white">
@@ -190,7 +198,8 @@ function SideMenu(){
                 <div className="sticky inset-x-0 bottom-0 border-t border-gray-100 bg-white p-2">
                     <form action="/logout">
                     <button
-                        type="submit"
+                        type="button"
+                        onClick= {signOut}
                         className="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                     >
                         <svg
