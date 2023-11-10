@@ -135,7 +135,7 @@ function Login() {
                     </p>
 
                     <button
-                        type="submit"
+                        type="button"
                         onClick={handleLogin}
                         className="inline-block rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
                     >

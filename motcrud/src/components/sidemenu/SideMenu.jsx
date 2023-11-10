@@ -6,7 +6,7 @@ function SideMenu(){
 
     const navigate = useNavigate();
     const signOut = () => {
-        localStorage.removeItem('kjhuhsnner27vToken')
+        localStorage.removeItem('kjhuhsnnervToken')
         navigate("/");
     }
 
