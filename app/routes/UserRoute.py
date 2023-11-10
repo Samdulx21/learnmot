@@ -19,20 +19,20 @@ async def get_users():
 
 @router.post("/login/signup")
 async def login_user(login_item: UserLogin):
-    user_validation_result = users.validation(login_item)
+    try:
+        user_validation_result = users.validation(login_item)
 
-    if "email" in user_validation_result and "user_pass" in user_validation_result:
-        encode_jwt = create_jwt(user_validation_result)
-        return {'token': encode_jwt}
-    else:
-        raise HTTPException(status_code=401, detail="Login failed")
+        if "email" in user_validation_result and "user_pass" in user_validation_result:
+            encode_jwt = create_jwt(user_validation_result)
+            return {'token': encode_jwt}
+        else:
+            raise HTTPException(status_code=401, detail="Login failed")
+    except jwt.exceptions.PyJWTError:
+        raise HTTPException(status_code=500, detail="Error generating token")
 
 def create_jwt(data):
-    try:
-        encode_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
-        return encode_jwt
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=500, detail="Error generating token")
+    encode_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    return encode_jwt
     
 
 @router.post("/insert/user")
