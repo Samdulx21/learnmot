@@ -53,6 +53,15 @@ function HeaderHome(){
                                         Services
                                     </a>
                                     </li>
+
+                                    <li>
+                                    <Link
+                                        className="text-gray-500 transition hover:text-gray-500/75"
+                                        to="/contact"
+                                    >
+                                        Contact
+                                    </Link>
+                                    </li>
                                 </ul>
                             </nav>
 

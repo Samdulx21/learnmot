@@ -5,7 +5,6 @@ class User(BaseModel):
     name: str 
     last_name: str 
     sex: str
-    role: str 
     email: str
     user_pass: str 
 

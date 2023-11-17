@@ -23,13 +23,12 @@ class UserController:
                     'name':item[1],
                     'last_name':item[2],
                     'sex':item[3],
-                    'role':item[4],
-                    'email':item[5],
-                    'user_pass':item[6],
+                    'email':item[4],
+                    'user_pass':item[5],
                 }
                 payload.append(content)
                 content = {}
-            print(payload)
+            # print(payload)
             json_data = jsonable_encoder(payload)
             if response:            
                 return {"result": json_data}
@@ -46,14 +45,13 @@ class UserController:
             name = newuser.name
             last_name = newuser.last_name
             sex = newuser.sex
-            role = newuser.role
             email = newuser.email
             user_pass = newuser.user_pass
             mydb = get_db_connection()
             db = mydb.cursor() 
             db.execute("""
-                    INSERT INTO users(name,last_name,sex,role,email,user_pass) VALUES(%s,%s,%s,%s,%s,%s)""",
-                    (name,last_name,sex,role,email,user_pass))
+                    INSERT INTO users(name,last_name,sex,email,user_pass) VALUES(%s,%s,%s,%s,%s)""",
+                    (name,last_name,sex,email,user_pass))
             mydb.commit()
             mydb.close()
             return {"info":"User create successfully."}
@@ -76,7 +74,6 @@ class UserController:
             name = updateuser.name
             last_name = updateuser.last_name
             sex = updateuser.sex
-            role = updateuser.role
             email = updateuser.email
             user_pass = updateuser.user_pass
             update = """
@@ -84,7 +81,6 @@ class UserController:
                 name = %s,
                 last_name = %s,
                 sex = %s,
-                role = %s,
                 email = %s,
                 user_pass = %s
                 WHERE id = %s

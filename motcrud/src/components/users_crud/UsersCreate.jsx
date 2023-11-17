@@ -6,7 +6,6 @@ function UsersCreate(){
         name: '',
         last_name: '',
         sex: '',
-        role: '',
         email: '',
         password: ''
     });
@@ -30,7 +29,6 @@ function UsersCreate(){
                     name: '',
                     last_name: '',
                     sex: '',
-                    role: '',
                     email: '',
                     password: ''
                 });
