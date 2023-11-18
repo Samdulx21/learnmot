@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 // import axios from "axios";
 
 
@@ -46,15 +46,11 @@ function UsersList(){
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{user.sex}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{user.email}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >
-                                <Link
-                                    to={{
-                                        pathname: `/update/user/${user.id}`,
-                                        search: `?id=${user.id}&name=${user.name}&last_name=${user.last_name}&sex=${user.sex}&email=${user.email}&password=${user.password}`
-                                    }}
+                                <a
                                     className='bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4'
                                 >
                                     Editar
-                                </Link>
+                                </a>
                                 
                             </td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >
