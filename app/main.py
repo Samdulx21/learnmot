@@ -4,7 +4,8 @@ from datetime import date
 from pydantic import BaseModel
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
-from routes import UserRoute, HomeRoute, ObservationRoute
+from routes import UserRoute, HomeRoute, ObservationRoute, login
+import uvicorn
 
 app = FastAPI()
 
@@ -16,6 +17,10 @@ origins = [
     #"http://localhost:8080",
 ]
 
+# origins = [
+#     "http://localhost:3000",
+# ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -25,11 +30,11 @@ app.add_middleware(
 )
 
 app.include_router(HomeRoute.router)
+app.include_router(login.router)
 app.include_router(UserRoute.router)
 app.include_router(ObservationRoute.router)
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 

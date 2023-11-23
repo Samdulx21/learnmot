@@ -1,5 +1,19 @@
+import {useEffect, useState} from "react"
+
 function HeaderUsers(){
-    
+
+    const [ userName, setUserName ] = useState();
+    useEffect(() => {
+        if (typeof window !== "undefined" && window.localStorage) {
+            const user = JSON.parse(localStorage?.getItem("user"));
+            setUserName(user);
+          }
+    }, [])
+
+    const capitaLetter = (str) => {
+        return str ? str.charAt(0).toUpperCase() + str.slice(1)  : '';
+    };
+
     return(
         <div>
             <header className="bg-gray-50">
@@ -67,9 +81,9 @@ function HeaderUsers(){
                             />
 
                             <p className="ms-2 hidden text-left text-xs sm:block">
-                                <strong className="block font-medium">Eric Frusciante</strong>
+                                <strong className="block font-medium">{capitaLetter(userName?.name)} {capitaLetter(userName?.last_name)}</strong>
 
-                                <span className="text-gray-500"> eric@frusciante.com </span>
+                                <span className="text-gray-500"> {userName?.email}</span>
                             </p>
                             </div>
                         </div>
@@ -77,7 +91,7 @@ function HeaderUsers(){
 
                     <div className="mt-8">
                         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                            Welcome Back, Barry!
+                            Welcome Back, {capitaLetter(userName?.name)}!
                         </h1>
 
                         <p className="mt-1.5 text-sm text-gray-500">

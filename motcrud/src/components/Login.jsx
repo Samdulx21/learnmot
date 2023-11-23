@@ -1,34 +1,50 @@
 import { useState } from "react"
 import axios from 'axios'
 import { useNavigate } from "react-router-dom";
-import {setToken, fetchToken} from './Auth'
+import {setToken, fetchToken, setTokenType} from './Auth'
 
 function Login() {
 
     const navigate = useNavigate();
     const [ email, setEmail ] = useState('');
     const [ user_pass, setUser_Pass ] = useState('');
+    const [error, setError] = useState(null);
+    
+    const handleLogin = (e) => {
 
-    const handleLogin = () => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append("username", email);  
+        formData.append("password", user_pass);  
+
         if (email.length === 0 || user_pass.length === 0){
             alert('Email or password cannot be blank!');
         }else{
             console.log('axios')
-            axios.post('http://127.0.0.1:8000/login/signup', {
-                email: email,
-                user_pass: user_pass
+            axios.post('http://127.0.0.1:8000/login', formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             })
             .then(function (response) {
                 console.log(response);
-                console.log(response.data);
-
-                if (response.data.token) {
-                    setToken(response.data.token);
+                if (response.data.token && response.data.token_type){
+                    // console.log(response.data.token)
+                    // console.log(response.data.token_type)
+                    const token = response.data.token;
+                    const tokenType = response.data.token_type;
+                    setToken(token);
+                    setTokenType(tokenType);
+                    axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
                     navigate("/home/users");
                 } else {
                     alert("Login failed");
-                    
-                }   
+                }
+                axios.get("http://127.0.0.1:8000/user").then((res) => {
+                    localStorage.setItem("user", JSON.stringify(res.data));
+                })
+            }).then((response) => {
+                setError(null);
             })
             .catch(function (error) {
                 console.log(error, 'error');
@@ -36,7 +52,6 @@ function Login() {
             });
         }
     }
-    
 
     return (
         <div>
@@ -60,19 +75,19 @@ function Login() {
                 <div className="mx-auto max-w-lg text-center">
                     <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
                     {
-                    fetchToken() 
-                    ? (
-                        <p className="mt-4 text-gray-500">
-                            You are logged in!
-                        </p>
-                    )
-                    : (
-                        <p className="mt-4 text-gray-500">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla
-                            eaque error neque ipsa culpa autem, at itaque nostrum!
-                        </p>
-                    )
-                }
+                        fetchToken() 
+                            ? (
+                                <p className="mt-4 text-gray-500">
+                                    You are logged in!
+                                </p>
+                            )
+                            : (
+                                <p className="mt-4 text-gray-500">
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla
+                                    eaque error neque ipsa culpa autem, at itaque nostrum!
+                                </p>
+                            )
+                    }
                 </div>
 
                 <form action="" className="mx-auto mb-0 mt-8 max-w-md space-y-4">

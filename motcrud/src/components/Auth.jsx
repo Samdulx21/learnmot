@@ -8,12 +8,20 @@ import {
 
 export const setToken = (token) =>{
     // set token in localStorage
-    localStorage.setItem('kjhuhsnnervToken', token)
+    localStorage.setItem('token', token)
 }
+
+export const setTokenType = (token_type) => {
+    localStorage.setItem('token_type', token_type)
+}
+
+// export const setTokenUserData = (user_data) => {
+//     localStorage.setItem('user_data', user_data)
+// }
 
 export const fetchToken = (token) =>{
     // fetch the token
-    return localStorage.getItem('kjhuhsnnervToken')
+    return localStorage.getItem('token')
 }
 
 export function RequireToken({children}) {

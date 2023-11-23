@@ -1,23 +1,35 @@
-import { Link } from "react-router-dom"
-import {useNavigate} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom"
 
 
 function SideMenu(){
 
     const navigate = useNavigate();
     const signOut = () => {
-        localStorage.removeItem('kjhuhsnnervToken')
+        localStorage.removeItem('token')
         navigate("/");
     }
+    const [ userName, setUserName ] = useState();
+    useEffect(() => {
+        if (typeof window !== "undefined" && window.localStorage) {
+            const user = JSON.parse(localStorage?.getItem("user"));
+            setUserName(user);
+          }
+    }, [])
+
+    const letter = (str) => {
+        return str ? str.charAt(0).toUpperCase() + str.slice(1)  : '';
+    };
+    
 
     return (
-        <>
+        <div>
             <div className="flex h-screen w-16 flex-col justify-between border-e bg-white">
                 <div>
                     <div className="inline-flex h-16 w-16 items-center justify-center">
                         <span
                             className="grid h-10 w-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
-                            L
+                            {letter(userName?.name[0])}
                         </span>
                     </div>
 
@@ -226,7 +238,7 @@ function SideMenu(){
                     </form>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

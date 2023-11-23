@@ -116,21 +116,43 @@ class UserController:
         finally:
             mydb.close()
 
-    def validation(self, user_login: UserLogin):
-        try:
-            mydb = get_db_connection()
-            db = mydb.cursor()
-            user_email = user_login.email
-            user_pass = user_login.user_pass 
-            query_login = "SELECT email, user_pass FROM users WHERE email = %s AND user_pass = %s"
-            db.execute(query_login, (user_email, user_pass))
-            response = db.fetchone()
-            if response:
-                return {"email": user_email, "user_pass": user_pass}
-            else:
-                raise HTTPException(status_code=401, detail="Incorrect Credentials")
-        except mysql.connector.Error as err:
-            mydb.rollback()
-            return {"error": err}
-        finally:
-            mydb.close()
+    # def get_user_signin(self, username: str):
+    #     mydb = get_db_connection()
+    #     db = mydb.cursor()
+    #     db.execute("SELECT * FROM usuarios WHERE Nombre = %s", username)
+    #     user = db.fetchone()
+    #     if user:
+    #         return UserDB(**user)
+
+    # def verify_password(self, plain_password, hashed_password):
+    #     return pwd_context.verify(plain_password, hashed_password)
+
+
+    # def validation(self, user_login: UserLogin):
+    #     try:
+    #         mydb = get_db_connection()
+    #         db = mydb.cursor()
+    #         user_email = user_login.email
+    #         user_pass = user_login.user_pass 
+    #         query_login = "SELECT * FROM users WHERE email = %s AND user_pass = %s"
+    #         db.execute(query_login, (user_email, user_pass))
+    #         response = db.fetchone()
+
+    #         if response:
+    #             user_details = {
+    #             'id': response[0],
+    #             'name': response[1],
+    #             'last_name': response[2],
+    #             'sex': response[3],
+    #             'email': user_email[4],
+    #             'user_pass': user_pass[5],
+    #             }
+    #             return jsonable_encoder(user_details)
+    #             # return {"email": user_email, "user_pass": user_pass}
+    #         else:
+    #             raise HTTPException(status_code=401, detail="Incorrect Credentials")
+    #     except mysql.connector.Error as err:
+    #         mydb.rollback()
+    #         return {"error": err}
+    #     finally:
+    #         mydb.close()
