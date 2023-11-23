@@ -12,6 +12,12 @@ class UserLogin(BaseModel):
     email: str
     user_pass: str
 
+class EditUser(BaseModel):
+    name: str 
+    last_name: str 
+    sex: str
+    email: str
+
 # class TokenData(BaseModel):
 #     username: str | None = None
 

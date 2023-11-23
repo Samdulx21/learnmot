@@ -1,98 +1,151 @@
-import { useState } from "react"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function UseresEdit({ user, onUpdate }){
-
-    // const [ userEdit, setUserEdit ] = useState({
-    //     name: user.name,
-    //     last_name: user.last_name,
-    //     sex: user.sex,
-    //     role: user.role,
-    //     email: user.email,
-    //     password: user.password,
-    // })
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData({ ...formData, [name]: value });
-    // };
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-        
-    //     const formDataObject = new FormData();
-    //     formDataObject.append('name', formData.name);
-    //     formDataObject.append('last_name', formData.last_name);
-    //     formDataObject.append('sex', formData.sex);
-    //     formDataObject.append('role', formData.role);
-    //     formDataObject.append('email', formData.email);
-    //     formDataObject.append('password', formData.password);
-
-    //     fetch("http://127.0.0.1:8000/update/user/${user.id}", {
-    //         method: 'PUT', // O el método HTTP adecuado para actualizar datos
-    //         body: formDataObject,
-    //       })
-    //         .then((response) => {
-    //           if (response.ok) {
-    //             // Actualización exitosa, puedes realizar acciones adicionales aquí si es necesario.
-    //             // Por ejemplo, cerrar el formulario de edición.
-    //             onUpdate(formData);
-    //           } else {
-    //             // Manejo de errores si la actualización no fue exitosa.
-    //             console.error('Error al actualizar el usuario.');
-    //           }
-    //         })
-    //         .catch((error) => {
-    //           console.error('Error en la solicitud de actualización:', error);
-    //         });
-    // };
+function UsersEdit(){
+  
+    const navigate =  useNavigate();
+    const dataUser = JSON.parse(localStorage.getItem("useredit"));
+    const [formData, setFormData] = useState({
+        name: dataUser.name || "",
+        last_name: dataUser.last_name || "",
+        sex: dataUser.sex || "",
+        email: dataUser.email || "",
+    });
+    const typeGeners = [
+        {
+            name: "male"
+        },
+        {
+            name: "female"
+        }
+    ]
+    
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+        }));
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+        const response = await axios.put(`http://127.0.0.1:8000/update/user/${dataUser.id}`, formData)
+            
+        console.log("Actualización exitosa", response.data);
+        navigate("/check/users");
+        } catch (error) {
+        console.error("Error al actualizar", error);
+        }
+    };
 
     return (
-        <div className="overflow-x-auto mx-auto">
-          <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-            <thead className="ltr:text-left rtl:text-right">
-              <tr>
-                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                  #
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                  Nombre
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                  Apellido
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                  Sexo
-                </th>
-                <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                  role
-                </th>
-                <th className="px-4 py-2"></th>
-              </tr>
-            </thead>
-        
-            <tbody className="divide-y divide-gray-200">
-              <tr>
-                <td
-                className="whitespace-nowrap px-4 py-2 font-medium text-gray-900 text-center">
-                  1
-                </td>
-                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-center">Joe</td>
-                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-center">Webb</td>
-                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-center">Male</td>
-                <td className="whitespace-nowrap px-4 py-2 text-gray-700 text-center">Admin Role</td>
-                <td className="whitespace-nowrap px-4 py-2">
-                  <a
-                    href="#"
-                    className="inline-block rounded bg-teal-500 hover:bg-teal-600 px-4 py-2 text-xs font-medium text-white"
-                  >
-                    Change
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-      </div>
-    )
+        <div>
+        <section className="">
+            <div className="items-center px-5 py-12 lg:px-20">
+            <div className="flex flex-col w-full max-w-md p-10 mx-auto my-6 transition duration-500 ease-in-out transform bg-white rounded-lg md:mt-0">
+                <div className="mt-2">
+                <div className="mt-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium text-neutral-600">
+                            Name
+                            </label>
+                            <div className="mt-1">
+                            <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                autoComplete="name"
+                                required
+                                placeholder="Your name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
+                            />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="last_name" className="block text-sm font-medium text-neutral-600">
+                            Last name
+                            </label>
+                            <div className="mt-1">
+                            <input
+                                id="last_name"
+                                name="last_name"
+                                type="text"
+                                autoComplete="Last_name"
+                                required
+                                value={formData.last_name}
+                                onChange={handleInputChange}
+                                placeholder="Your last name"
+                                className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
+                            />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="sex" className="block text-sm font-medium text-neutral-600">
+                                Sex
+                            </label>
+
+                            <select
+                                name="sex"
+                                id="sex"
+                                value={formData.sex}
+                                onChange={handleInputChange}
+                                className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
+                            >   
+                                <option value="">
+                                    Selecciona el sexo
+                                </option>
+                                {typeGeners.map((typeGener, index) => (
+                                    <option key={index} value={typeGener.name}>
+                                        {typeGener.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-neutral-600">
+                            Email address
+                            </label>
+                            <div className="mt-1">
+                            <input
+                                id="email"
+                                name="email"
+                                type="text"
+                                autoComplete="email"
+                                required
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                placeholder="Your Email"
+                                className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
+                            />
+                            </div>
+                        </div>
+
+                        <div>
+                            <button
+                            type="submit"
+                            className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-teal-600 rounded-xl hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
+                            actualizar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </div>
+    );
+    
 }
 
-export default UseresEdit
+export default UsersEdit

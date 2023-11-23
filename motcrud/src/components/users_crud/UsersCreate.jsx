@@ -7,45 +7,42 @@ function UsersCreate(){
         last_name: '',
         sex: '',
         email: '',
-        password: ''
+        password: '',
     });
-
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('http://127.0.0.1:8000/insert/user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
+        const response = await axios.post('http://127.0.0.1:8000/insert/user', formData, {
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        });
+    
+        if (response.status === 200) {
+            alert('Usuario creado exitosamente: ' + response.data.info);
+    
+            setFormData({
+            name: '',
+            last_name: '',
+            sex: '',
+            email: '',
+            password: '',
             });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert('Usuario creado exitosamente: ' + data.info);
-
-                setFormData({
-                    name: '',
-                    last_name: '',
-                    sex: '',
-                    email: '',
-                    password: ''
-                });
-            } else {
-                alert('Error: ' + data.error);
-            }
+        } else {
+            alert('Error: ' + response.data.error);
+        }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Ocurrió un error al enviar la solicitud.');
+        console.error('Error:', error);
+        alert('Ocurrió un error al enviar la solicitud.');
         }
     };
-
+    
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData({
-            ...formData,
-            [name]: value
+        ...formData,
+        [name]: value,
         });
     };
 

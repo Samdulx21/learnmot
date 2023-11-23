@@ -11,7 +11,7 @@ function HeaderUsers(){
     }, [])
 
     const capitaLetter = (str) => {
-        return str ? str.charAt(0).toUpperCase() + str.slice(1)  : '';
+        return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
     };
 
     return(
@@ -83,7 +83,7 @@ function HeaderUsers(){
                             <p className="ms-2 hidden text-left text-xs sm:block">
                                 <strong className="block font-medium">{capitaLetter(userName?.name)} {capitaLetter(userName?.last_name)}</strong>
 
-                                <span className="text-gray-500"> {userName?.email}</span>
+                                <span className="text-gray-500"> {userName?.email} </span>
                             </p>
                             </div>
                         </div>

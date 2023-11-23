@@ -2,7 +2,7 @@ import mysql.connector
 import jwt
 from fastapi import HTTPException
 from config.database_config import get_db_connection
-from models.ModelUsers import User, UserLogin
+from models.ModelUsers import User, EditUser
 from fastapi.encoders import jsonable_encoder
 
 
@@ -61,7 +61,7 @@ class UserController:
         finally:
             mydb.close()
 
-    def update_user(self, id: int, updateuser: User):
+    def update_user(self, id: int, updateuser: EditUser):
         try:
             mydb = get_db_connection()
             db = mydb.cursor()
@@ -75,17 +75,15 @@ class UserController:
             last_name = updateuser.last_name
             sex = updateuser.sex
             email = updateuser.email
-            user_pass = updateuser.user_pass
             update = """
                 UPDATE users SET
                 name = %s,
                 last_name = %s,
                 sex = %s,
-                email = %s,
-                user_pass = %s
+                email = %s
                 WHERE id = %s
             """
-            db.execute(update,(name,last_name,sex,role,email,user_pass, id))
+            db.execute(update,(name,last_name,sex,email, id))
             mydb.commit()
             mydb.close()
             return {"info":"User updated successfully."}
@@ -115,44 +113,3 @@ class UserController:
             return {"error": err}
         finally:
             mydb.close()
-
-    # def get_user_signin(self, username: str):
-    #     mydb = get_db_connection()
-    #     db = mydb.cursor()
-    #     db.execute("SELECT * FROM usuarios WHERE Nombre = %s", username)
-    #     user = db.fetchone()
-    #     if user:
-    #         return UserDB(**user)
-
-    # def verify_password(self, plain_password, hashed_password):
-    #     return pwd_context.verify(plain_password, hashed_password)
-
-
-    # def validation(self, user_login: UserLogin):
-    #     try:
-    #         mydb = get_db_connection()
-    #         db = mydb.cursor()
-    #         user_email = user_login.email
-    #         user_pass = user_login.user_pass 
-    #         query_login = "SELECT * FROM users WHERE email = %s AND user_pass = %s"
-    #         db.execute(query_login, (user_email, user_pass))
-    #         response = db.fetchone()
-
-    #         if response:
-    #             user_details = {
-    #             'id': response[0],
-    #             'name': response[1],
-    #             'last_name': response[2],
-    #             'sex': response[3],
-    #             'email': user_email[4],
-    #             'user_pass': user_pass[5],
-    #             }
-    #             return jsonable_encoder(user_details)
-    #             # return {"email": user_email, "user_pass": user_pass}
-    #         else:
-    #             raise HTTPException(status_code=401, detail="Incorrect Credentials")
-    #     except mysql.connector.Error as err:
-    #         mydb.rollback()
-    #         return {"error": err}
-    #     finally:
-    #         mydb.close()

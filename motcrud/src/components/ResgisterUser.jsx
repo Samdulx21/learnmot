@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function RegisterUser(){
 
@@ -10,6 +11,15 @@ function RegisterUser(){
         email: "",
         user_pass: "",
     });  
+    const navigate = useNavigate();
+    const typeGeners = [
+        {
+            name: "male"
+        },
+        {
+            name: "female"
+        }
+    ]
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,6 +29,7 @@ function RegisterUser(){
             .then( function(response) {
                     console.log(response);
                     console.log(response.data);
+                    navigate("/home/users");
                 }
             ).catch(function (error){
                 console.log(error,'error')
@@ -34,7 +45,7 @@ function RegisterUser(){
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         })
     };
 
@@ -101,20 +112,25 @@ function RegisterUser(){
                             </div>
 
                             <div>
-                                <label htmlFor="Sex" className="block text-sm font-medium text-neutral-600">
+                                <label htmlFor="sex" className="block text-sm font-medium text-neutral-600">
                                     Sex
                                 </label>
 
                                 <select
-                                    name="Sex"
-                                    id="Sex"
-                                    value={formData.sex}
+                                    name="sex"
+                                    id="sex"
+                                    options={formData.sex}
                                     onChange={handleChange}
                                     className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
-                                >
-                                    <option value="">Please select</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                                >   
+                                    <option value="">
+                                        Selecciona el sexo
+                                    </option>
+                                    {typeGeners.map((typeGener, index) => (
+                                        <option key={index} value={typeGener.name}>
+                                            {typeGener.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
 
@@ -228,4 +244,3 @@ function RegisterUser(){
 }
 
 export default RegisterUser;
-

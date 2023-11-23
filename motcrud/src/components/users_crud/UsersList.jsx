@@ -1,21 +1,47 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-// import axios from "axios";
+import { useNavigate  } from "react-router-dom";
 
 
 function UsersList(){
     const [users, setUsers] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/list/users')  // La URL de la API
-            .then(response => response.json())
-            .then(data => setUsers(data.result));
+        const fetchData = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/list/users');
+            const data = response.data;
+            setUsers(data.result);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        };
+    
+        fetchData();
     }, []);
+
+    const deleteUser = (id) => {
+        axios.delete(`http://127.0.0.1:8000/delete/user/${id}`)
+        .then(() => {
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+        })
+        .catch((error) => {
+            console.error('Error deleting user:', error);
+        });
+    };
+
+    const handleEdit = (user) => {
+        localStorage.setItem("useredit", JSON.stringify(user));
+        console.log(JSON.stringify(user));
+    
+        navigate("/edit/users");
+    };
 
 
     return (
         
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <div className="overflow-x-auto rounded-lg border border-gray-200 h-96">
             <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
                 <thead className="ltr:text-left rtl:text-right">
                     <tr>
@@ -32,7 +58,7 @@ function UsersList(){
                         Sexo
                         </th>
                         <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                        email
+                        Email
                         </th>
                     </tr>
                 </thead>
@@ -46,15 +72,18 @@ function UsersList(){
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{user.sex}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{user.email}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >
-                                <a
-                                    className='bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4'
+                                <button
+                                onClick={() => handleEdit(user)}                    
+                                className='bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4'
                                 >
                                     Editar
-                                </a>
+                                </button>
                                 
                             </td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >
-                                <button className="bg-gray-700 hover:bg-red-400 text-white font-bold py-2 px-4">
+                                <button
+                                onClick={() => deleteUser(user.id)} 
+                                className="bg-gray-700 hover:bg-red-400 text-white font-bold py-2 px-4">
                                     Eliminar
                                 </button>
                             </td>
