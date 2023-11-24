@@ -11,17 +11,23 @@ function UsersPeople(){
                         <div className="grid grid-cols-2 gap-2 lg:grid-cols-2 lg:gap-4">
                             
                             <div className="">
-                                <UsersCreate />
-                                
+                                <p className="text-center text-sm font-bold pb-2"> Profesores </p>
+                                <UsersList roleFilter="Teacher Role" />
                             </div>
                             
-                            <div className="">
-                                <UsersList />
+                            <div>
+                                <p className="text-center text-sm font-bold pb-2"> Estudiantes </p>
+                                <UsersList roleFilter="Student Role" />
                             </div>
 
-                            <div className="col-span-2" >
+                            <div className="" >
+                                <UsersCreate />
                             </div>
                             
+                            <div>
+                                <p className="text-center text-sm font-bold pb-2"> Usuarios Pendiantes </p>
+                                <UsersList roleFilter="" />
+                            </div>
 
                         </div>
                     </div>

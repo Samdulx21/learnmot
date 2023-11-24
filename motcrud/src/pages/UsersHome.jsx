@@ -1,5 +1,5 @@
-import SideMenu from "../../components/sidemenu/sideMenu"
-import HeaderUsers from "../../components/navbar/HeaderUsers"
+import SideMenu from "../components/sidemenu/sideMenu"
+import HeaderUsers from "../components/navbar/HeaderUsers"
 
 function UsersHome(){
     return (

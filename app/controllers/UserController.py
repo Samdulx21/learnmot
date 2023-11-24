@@ -40,6 +40,45 @@ class UserController:
         finally:
             mydb.close()
 
+    def get_users_by_role(self):
+        try:
+            mydb = get_db_connection()
+            db = mydb.cursor()
+            db.execute("""
+                        SELECT u.id, u.name, u.last_name, COALESCE(r.description, null) as role, u.sex, u.email 
+                        FROM 
+                            users u
+                        LEFT JOIN
+                            role_users ru ON u.id = ru.user_id
+                        LEFT JOIN
+                            roles r ON ru.role_id = r.id;
+                       """)
+            response = db.fetchall()
+            payload = []
+            content = {} 
+            for item in response:
+                content={
+                    'id': item[0],
+                    'name':item[1],
+                    'last_name':item[2],
+                    'role':item[3],
+                    'sex':item[4],
+                    'email':item[5],
+                }
+                payload.append(content)
+                content = {}
+            # print(payload)
+            json_data = jsonable_encoder(payload)
+            if response:            
+                return {"result": json_data}
+            else:
+                raise HTTPException(status_code=404, detail="User not found")     
+        except mysql.connector.Error as err:
+            mydb.rollback()
+            return {"error": err}
+        finally:
+            mydb.close()
+
     def insert_user(self, newuser: User):
         try:
             name = newuser.name
@@ -61,7 +100,7 @@ class UserController:
         finally:
             mydb.close()
 
-    def update_user(self, id: int, updateuser: EditUser):
+    def update_user(self, id: int, updateuser: User):
         try:
             mydb = get_db_connection()
             db = mydb.cursor()
@@ -79,6 +118,7 @@ class UserController:
                 UPDATE users SET
                 name = %s,
                 last_name = %s,
+                role = %s,
                 sex = %s,
                 email = %s
                 WHERE id = %s
@@ -91,6 +131,47 @@ class UserController:
             mydb.rollback()
             return {"error": err}
         finally:
+            mydb.close()
+
+    def update_user_insert_role(self, id: int, role_id: int, updateuser: EditUser):
+        try:
+            mydb = get_db_connection()
+            db = mydb.cursor()
+
+            # Verificar si el usuario existe
+            idsql = "SELECT id FROM users WHERE id = %s"
+            db.execute(idsql, (id,))
+            user_exists = db.fetchone()
+
+            if not user_exists:
+                raise HTTPException(status_code=404, detail=f"User with ID '{id}' not found.")
+
+            # Actualizar los datos del usuario
+            update_user_query = """
+                UPDATE users SET
+                name = %s,
+                last_name = %s,
+                sex = %s,
+                email = %s
+                WHERE id = %s
+            """
+            db.execute(update_user_query, (updateuser.name, updateuser.last_name, updateuser.sex, updateuser.email, id))
+
+            # Insertar o actualizar la tabla role_users basada en role_name
+            role_user_query = """
+                INSERT INTO role_users (role_id, user_id)
+                VALUES (%s, %s)
+                ON DUPLICATE KEY UPDATE role_id = VALUES(role_id)
+            """
+            db.execute(role_user_query, (role_id, id))
+
+            mydb.commit()
+            return {"info": "User and role updated successfully."}
+        except mysql.connector.Error as err:
+            mydb.rollback()
+            raise HTTPException(status_code=500, detail=f"Database error: {err}")
+        finally:
+            db.close()
             mydb.close()
 
     def delete_user(self, id: int):
@@ -113,3 +194,19 @@ class UserController:
             return {"error": err}
         finally:
             mydb.close()
+
+
+# INSERT INTO role_users (role_id, user_id)
+# SELECT roles.id AS role_id, users.id AS user_id
+# FROM roles
+# JOIN role_users ON roles.id = role_users.role_id
+# JOIN users ON role_users.user_id = users.id
+# WHERE roles.name = %s AND users.id = %s;
+
+# UPDATE users SET
+#   name = %s,
+#   last_name = %s,
+#   role = %s,
+#   sex = %s,
+#   email = %s
+# WHERE id = %s;

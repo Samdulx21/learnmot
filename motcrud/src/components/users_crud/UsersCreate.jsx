@@ -7,11 +7,18 @@ function UsersCreate(){
         last_name: '',
         sex: '',
         email: '',
-        password: '',
+        user_pass: '',
     });
+    const typeGeners = [
+        {
+            name: "male"
+        },
+        {
+            name: "female"
+        }
+    ]
     
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async () => {
         try {
         const response = await axios.post('http://127.0.0.1:8000/insert/user', formData, {
             headers: {
@@ -27,7 +34,7 @@ function UsersCreate(){
             last_name: '',
             sex: '',
             email: '',
-            password: '',
+            user_pass: '',
             });
         } else {
             alert('Error: ' + response.data.error);
@@ -83,35 +90,26 @@ function UsersCreate(){
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <label className="sr-only" htmlFor="sex">Sexo</label>
-                                <input
-                                    className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                                    placeholder="Sexo"
-                                    type="text"
+                                <select
+                                    className="w-full rounded-lg border-gray-200 p-3"
                                     id="sex"
                                     name="sex"
-                                    value={formData.sex}
+                                    options={formData.sex}
                                     onChange={handleInputChange} 
                                     required
-                                />
+                                >
+                                     <option value="" className='text-sm text-slate-100'>
+                                        Selecciona el Sexo
+                                    </option>
+                                    {typeGeners.map((typeGener, index) => (
+                                        <option key={index} value={typeGener.name}>
+                                            {typeGener.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-
                             <div>
-                                <label className="sr-only" htmlFor="role">Rol</label>
-                                <input
-                                    className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                                    placeholder="Rol"
-                                    type="text"
-                                    id="role"
-                                    name="role"
-                                    value={formData.role}
-                                    onChange={handleInputChange} 
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div>
-                                <label className="sr-only" htmlFor="email">Email</label>
+                                <label className="sr-only" htmlFor="email"></label>
                                 <input
                                     className="w-full rounded-lg border-gray-200 p-3 text-sm"
                                     placeholder="Email"
@@ -123,16 +121,17 @@ function UsersCreate(){
                                     required
                                 />
                             </div>
-
+                        </div>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
-                                <label className="sr-only" htmlFor="password">Password</label>
+                                <label className="sr-only" htmlFor="user_pass">Password</label>
                                 <input
                                     className="w-full rounded-lg border-gray-200 p-3 text-sm"
-                                    placeholder="Password"
+                                    placeholder="Contraseña"
                                     type="text"
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
+                                    id="user_pass"
+                                    name="user_pass"
+                                    value={formData.user_pass}
                                     onChange={handleInputChange} 
                                     required
                                 />

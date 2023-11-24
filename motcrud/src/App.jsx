@@ -1,9 +1,10 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import UsersSettings from './pages/users/UsersSettings'
-import UsersPeople from './pages/users/UsersPeople'
-import UsersHome from './pages/users/UsersHome'
+import UsersSettings from './pages/UsersSettings'
+import UsersPeople from './pages/users_admin/UsersPeople'
+import UsersHome from './pages/UsersHome'
 import UsersEdit from './components/users_crud/UsersEdit'
 import AcademicLoad from './pages/academic_load/AcademicLoad'
+import StudentList from './pages/academic_load/studentsLIst'
 import HomePage from './pages/HomePages'
 import RegisterUser from './components/ResgisterUser'
 import Login from './components/Login'
@@ -40,6 +41,12 @@ function App() {
           element={ 
             <RequireToken>
               <AcademicLoad />
+            </RequireToken>
+          } />
+        <Route path='/me/students' 
+          element={ 
+            <RequireToken>
+              <StudentList />
             </RequireToken>
           } />
         <Route path='/edit/users' 

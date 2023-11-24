@@ -3,12 +3,26 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function UsersEdit(){
-  
+    
     const navigate =  useNavigate();
-    const dataUser = JSON.parse(localStorage.getItem("useredit"));
+    const storedUserData = localStorage.getItem("useredit");
+    
+    // Intenta analizar la cadena JSON, o establece un objeto vacío si no es válido
+    const dataUser = (() => {
+        try {
+            return JSON.parse(storedUserData) || {};
+        } catch (error) {
+            console.error("Error al analizar el valor almacenado localmente:", error);
+            return {};
+        }
+    })();
+    
+    // Asegúrate de que dataUser.id sea un valor numérico o establecerlo en un valor predeterminado
+    const userId = Number.isInteger(dataUser.id) ? dataUser.id : parseInt(dataUser.id);
     const [formData, setFormData] = useState({
         name: dataUser.name || "",
         last_name: dataUser.last_name || "",
+        role: dataUser.role || 0,
         sex: dataUser.sex || "",
         email: dataUser.email || "",
     });
@@ -20,24 +34,70 @@ function UsersEdit(){
             name: "female"
         }
     ]
+
+    const typeRole = [
+        {
+            role_id: 1,
+            role: "Admin Role"
+        },
+        {
+            role_id: 2, 
+            role: "Teacher Role"
+        },
+        {
+            role_id: 3,
+            role: "Student Role"
+        }
+    ]
     
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-        }));
+
+        if (name === 'role') {
+            const selectedRole = typeRole.find(role => role.role === value);
+    
+            // Si se encuentra un valor correspondiente, establece formData.role con el role_id
+            // De lo contrario, mantén el valor original del campo
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: selectedRole ? selectedRole.role_id : value
+            }), () => {
+                // Después de actualizar el estado, actualiza el localStorage
+                localStorage.setItem("useredit", JSON.stringify({
+                    ...dataUser,
+                    [name]: selectedRole ? selectedRole.role_id : value
+                }));
+            });
+        } else {
+            // Para otros campos, simplemente actualiza el valor
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }), () => {
+                // Después de actualizar el estado, actualiza el localStorage
+                localStorage.setItem("useredit", JSON.stringify({
+                    ...dataUser,
+                    [name]: value
+                }));
+            });
+        }
     };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Comprueba si dataUser.id es un valor numérico antes de realizar la solicitud
+        if (!Number.isInteger(userId)) {
+            console.error("Error: dataUser.id no es un valor numérico válido");
+            return;
+        }
+
         try {
-        const response = await axios.put(`http://127.0.0.1:8000/update/user/${dataUser.id}`, formData)
-            
-        console.log("Actualización exitosa", response.data);
-        navigate("/check/users");
+            const response = await axios.put(`http://127.0.0.1:8000/update/user/${userId}/${formData.role}`, formData);
+
+            console.log("Actualización exitosa", response.data);
+            navigate("/check/users");
         } catch (error) {
-        console.error("Error al actualizar", error);
+            console.error("Error al actualizar", error);
         }
     };
 
@@ -85,6 +145,29 @@ function UsersEdit(){
                                 className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
                             />
                             </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="role" className="block text-sm font-medium text-neutral-600">
+                                Role
+                            </label>
+
+                            <select
+                                name="role"
+                                id="role"
+                                value={formData.role}
+                                onChange={handleInputChange}
+                                className="block w-full px-5 py-3 text-base text-neutral-600 placeholder-gray-300 transition duration-500 ease-in-out transform border border-transparent rounded-lg bg-gray-50 focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-green-300"
+                            >   
+                                <option value="">
+                                    Selecciona el role
+                                </option>
+                                {typeRole.map((role, index) => (
+                                    <option key={index} value={role.role_id}>
+                                        {role.role}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div>

@@ -11,6 +11,16 @@ async def get_academic_load():
     response = academicload.get_academic_load()
     return response
 
+@router.get("/topic/academicload/{id}")
+async  def get_list_academic(id: int):
+    response = academicload.get_academic_load_by_teacher(id)
+    return response
+
+@router.get("/table/students/{id}")
+async  def get_list_academic(id: int):
+    response = academicload.get_students(id)
+    return response
+
 @router.post("/insert/academicload")
 async def insert_academic_load(newacademicload: AcademicLoad):
     response = academicload.insert_academic_load(newacademicload)

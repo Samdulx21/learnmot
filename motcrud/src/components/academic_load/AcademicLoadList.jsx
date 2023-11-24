@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+
 
 function AcademicLoadList(){
 
     const [formData, setFormData] = useState([]);
+    const dataUser = JSON.parse(localStorage.getItem("user"));
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/list/academicload')  // La URL de la API
-            .then(response => response.json())
-            .then(data => setFormData(data.result));
-    }, []);
+      const fetchData = async () => {
+          try {
+            const response = await axios.get(`http://127.0.0.1:8000/topic/academicload/${dataUser.id}`);
+            const data = response.data;
+            setFormData(data.result);
 
+          } catch (error) {
+              console.error('Error fetching data:', error);
+          }
+      };
+      fetchData();
+  }, []);
+
+    
     return (
         <div>
             <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -28,13 +40,16 @@ function AcademicLoadList(){
                         <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
                         Expira
                         </th>
+                        <th className="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                            Accion
+                        </th>
                     </tr>
                 </thead>
 
                 <tbody className='divide-y divide-gray-200'>
-                    {formData.map(res => (
-                        <tr key={res.id}>
-                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{res.topic}</td>
+                    {formData.map((res, index) => (
+                        <tr key={index}>
+                            <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{res.name}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{res.description}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{res.since_date}</td>
                             <td className="whitespace-nowrap px-4 py-2 font-medium text-gray-900" >{res.until_date}</td>

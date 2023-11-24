@@ -15,6 +15,7 @@ class UserLogin(BaseModel):
 class EditUser(BaseModel):
     name: str 
     last_name: str 
+    role: int
     sex: str
     email: str
 

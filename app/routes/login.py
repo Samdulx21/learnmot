@@ -28,7 +28,17 @@ class TokenData(BaseModel):
 # Obtener usuario de la base de datos
 def get_user(db, username: str):
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE email = %s", (username,))
+    cursor.execute("""  
+                    SELECT u.id, u.name, u.last_name, r.name as role, u.sex, u.email, u.user_pass
+                    FROM 
+                        users u
+                    JOIN
+                        role_users ru ON u.id = ru.user_id
+                    JOIN
+                        roles r ON ru.role_id = r.id
+                    WHERE 
+                        email = %s;
+                """, (username,))
     user = cursor.fetchone()
     if user:
         return user
