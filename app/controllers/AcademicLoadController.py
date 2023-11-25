@@ -103,6 +103,71 @@ class AcademicLoadController():
         finally:
             mydb.close()
 
+    def get_teachers(self, id: int, status: int):
+        try:
+            mydb = get_db_connection()
+            db = mydb.cursor()
+
+            # Obtener datos de los profesores
+            db.execute("""
+                        SELECT u.name, al.toppic, al.description, al.since_date, al.until_date
+                        FROM users as u 
+                        JOIN academic_load as al
+                        ON u.id = al.teacher_id
+                        WHERE al.student_id = %s
+                        """, (id,))
+            teacher_data = db.fetchall()
+
+            # Actualizar el campo status en la tabla role_users
+            db.execute("""
+                        UPDATE role_users
+                        SET status = %s
+                        WHERE user_id = %s 
+                        """, (status, id))
+
+            mydb.commit()
+
+            payload = []
+            content = {}
+            for item in teacher_data:
+                content = {
+                    "name": item[0],
+                    "toppic": item[1],
+                    "description": item[2],
+                    "since_date": item[3],
+                    "until_date": item[4],
+                }
+                payload.append(content)
+                content = {}
+            json_data = jsonable_encoder(payload)
+            return {"result": json_data}
+        except mysql.connector.Error as err:
+            mydb.rollback()
+            return {"error": err}
+        finally:
+            mydb.close()
+
+    def updated_status(self, id: int, status: int):
+        try:
+            mydb = get_db_connection()
+            db = mydb.cursor()
+            # Actualizar el campo status en la tabla role_users
+            db.execute("""
+                        UPDATE role_users
+                        SET status = %s
+                        WHERE user_id = %s 
+                        """, (status, id))
+            mydb.commit()
+            mydb.close()
+            return {"result": "Status Updated"}
+        except mysql.connector.Error as err:
+            mydb.rollback()
+            return {"error": err}
+        finally:
+            mydb.close()
+
+        
+
     def insert_academic_load(self, academic: AcademicLoad):
         try: 
             teacher_id = academic.teacher_id
