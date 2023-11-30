@@ -22,11 +22,6 @@ async def insert_user(newuser: User):
     response = users.insert_user(newuser)
     return response
 
-# @router.put("/update/user/{id}")
-# async def update_user(id: int, newuser: EditUser):
-#     response = users.update_user(id, newuser)
-#     return response
-
 @router.put("/update/user/{id}/{role_id}")
 async def get_users_by_role(id: int, role_id: int, newuser: EditUser, ):
     response = users.update_user_insert_role(id, role_id, newuser)

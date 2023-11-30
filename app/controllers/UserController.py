@@ -138,7 +138,7 @@ class UserController:
             mydb = get_db_connection()
             db = mydb.cursor()
 
-            # Verificar si el usuario existe
+
             idsql = "SELECT id FROM users WHERE id = %s"
             db.execute(idsql, (id,))
             user_exists = db.fetchone()
@@ -146,7 +146,7 @@ class UserController:
             if not user_exists:
                 raise HTTPException(status_code=404, detail=f"User with ID '{id}' not found.")
 
-            # Actualizar los datos del usuario
+ 
             update_user_query = """
                 UPDATE users SET
                 name = %s,
@@ -157,7 +157,7 @@ class UserController:
             """
             db.execute(update_user_query, (updateuser.name, updateuser.last_name, updateuser.sex, updateuser.email, id))
 
-            # Insertar o actualizar la tabla role_users basada en role_name
+  
             role_user_query = """
                 INSERT INTO role_users (role_id, user_id)
                 VALUES (%s, %s)
@@ -194,19 +194,3 @@ class UserController:
             return {"error": err}
         finally:
             mydb.close()
-
-
-# INSERT INTO role_users (role_id, user_id)
-# SELECT roles.id AS role_id, users.id AS user_id
-# FROM roles
-# JOIN role_users ON roles.id = role_users.role_id
-# JOIN users ON role_users.user_id = users.id
-# WHERE roles.name = %s AND users.id = %s;
-
-# UPDATE users SET
-#   name = %s,
-#   last_name = %s,
-#   role = %s,
-#   sex = %s,
-#   email = %s
-# WHERE id = %s;

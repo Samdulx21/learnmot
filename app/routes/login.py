@@ -8,24 +8,19 @@ from pydantic import BaseModel
 from config.database_config import get_db_connection
 from models.ModelUsers import User
 
-
 router = APIRouter()
 
-# Configuración para encriptación de contraseñas
 SECRET_KEY = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY5ODk4NDEwNiwiaWF0IjoxNjk4OTg0MTA2fQ.W3U9ivlk6ZW1qteEuUvGOjUDp8ed20sBNPKDi4rXWE4"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-# Modelo de usuario para almacenamiento en base de datos
-class UsuarioDB(User):
+class UserDB(User):
     hashed_password: str
     
-# Clase de autenticación
 class TokenData(BaseModel):
     username: str | None = None
 
-# Obtener usuario de la base de datos
 def get_user(db, username: str):
     cursor = db.cursor(dictionary=True)
     cursor.execute("""  
@@ -43,10 +38,8 @@ def get_user(db, username: str):
     if user:
         return user
 
-# Clase para validar contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Validar contraseña
 
 def verify_password(plain_password, hashed_password):
     if plain_password == hashed_password:
@@ -54,7 +47,6 @@ def verify_password(plain_password, hashed_password):
     else:
         return False
 
-# Crear token JWT
 def create_jwt(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
     if expires_delta:
@@ -65,7 +57,6 @@ def create_jwt(data: dict, expires_delta: timedelta = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# Ruta de inicio de sesión
 @router.post("/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     db = get_db_connection()
@@ -77,7 +68,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"token": access_token, "token_type": "bearer"}
 
 
-# Ruta protegida que requiere autenticación
 @router.get("/user")
 async def get_authenticated_user(token: str = Depends(OAuth2PasswordBearer(tokenUrl="login"))):
     try:

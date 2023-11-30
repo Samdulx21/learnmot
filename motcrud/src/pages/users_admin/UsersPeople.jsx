@@ -25,7 +25,7 @@ function UsersPeople(){
                             </div>
                             
                             <div>
-                                <p className="text-center text-sm font-bold pb-2"> Usuarios Pendiantes </p>
+                                <p className="text-center text-sm font-bold pb-2"> Usuarios Pendientes </p>
                                 <UsersList roleFilter="" />
                             </div>
 
